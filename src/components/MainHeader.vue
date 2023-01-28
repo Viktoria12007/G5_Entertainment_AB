@@ -1,5 +1,5 @@
 <template lang="pug">
-  header header
+  header.header
 </template>
 
 <script>
@@ -8,6 +8,7 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
-
+<style lang="sass">
+.header
+ background-color: red
 </style>
