@@ -1,7 +1,7 @@
 <template lang="pug">
-  section
+  section.swiper__section
     div.container
-      div.swiper__wrap-loading
+      div.swiper__wrap
         div.swiper__loading(v-if="!imgs.length")
           div Loading...
         swiper.swiper-no-swiping(
@@ -81,13 +81,15 @@ export default {
 </script>
 
 <style lang="sass">
+.swiper__section
+  margin-bottom: 3px
 //.wrap-swiper
 //  padding-top: 8px
 //  padding-bottom: 20px
-.swiper__wrap-loading
+.swiper__wrap
   width: 100%
   height: 163px
-  text-align: center
+  //text-align: center
   overflow: hidden
 .swiper__loading
   width: 100%
