@@ -10,16 +10,27 @@ html, body
   font-size: 16px
   font-style: normal
   line-height: 19px
-  color: #111111
+  color: $black
 button
   font-family: inherit
   cursor: pointer
 a
+  display: inline-block
   text-decoration: none
 img
   max-width: 100%
+  height: auto
+  //max-height: 140px
   display: block
-.title
-  font-size: 32px
-  line-height: 32px
-  font-weight: 400
+  object-fit: cover
+//.title
+//  font-size: 32px
+//  line-height: 32px
+//  font-weight: 400
+.hide
+  display: none
+.show
+  display: block
+.container
+  max-width: 276px
+  margin: 0 auto
