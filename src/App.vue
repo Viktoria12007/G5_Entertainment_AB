@@ -1,9 +1,9 @@
 <template lang="pug">
   div(id="app")
-    MainHeader
+    MainHeader(@forcedUpdateProducts="forcedUpdateProducts")
     main.main__wrap
       BannerSlider
-      ProductsList
+      ProductsList(:forcedProducts="products")
 </template>
 
 <script>
@@ -17,6 +17,16 @@ export default {
     ProductsList,
     BannerSlider,
     MainHeader
+  },
+  data () {
+    return {
+     products: []
+    }
+  },
+  methods: {
+    forcedUpdateProducts (value) {
+      this.products = value;
+    }
   }
 }
 </script>

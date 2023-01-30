@@ -2,12 +2,12 @@
   section.products-list__section
     div.container
       div.products-list
-        div.products-item.products-list__item(
+        div.product-item.products-list__item(
           v-for="(product, index) in products",
           :key="product.id")
-          div.products-item__wrap-img
+          div.product-item__wrap-img
             img.product-item__img(:src="product.thumbnail", :alt="product.title")
-            div.products-item__badge(
+            div.product-item__badge(
               v-if="index < 3",
               :class="getBadge(index).class",
               ) {{ getBadge(index).text }}
@@ -30,9 +30,28 @@
 import axios from 'axios'
 export default {
   name: 'ProductsList',
+  props: {
+    forcedProducts: {
+      type: Array,
+      default () {
+        return [];
+      },
+    }
+  },
   data () {
     return {
       products: localStorage.products ? JSON.parse(localStorage.products) : [],
+      timersId: [],
+    }
+  },
+  watch: {
+    forcedProducts (n) {
+      if (n.length) {
+        this.products = n;
+        localStorage.products = JSON.stringify(this.products);
+        this.clearAllIntervalForStock();
+        this.setIntervalForStock();
+      }
     }
   },
   async mounted () {
@@ -41,16 +60,29 @@ export default {
       this.products = response.data.products;
       localStorage.products = JSON.stringify(this.products);
     }
-    this.products.forEach((item) => {
-      const timer = setInterval(() => {
-        item.stock -= 1
-        if (item.stock === 0) {
-          clearInterval(timer);
-        }
-      }, 1000 * this.getRandomSeconds());
-    });
+    this.setIntervalForStock();
+  },
+  beforeDestroy () {
+    this.clearAllIntervalForStock();
   },
   methods: {
+    clearAllIntervalForStock () {
+      this.timersId.forEach((timer) => {
+        clearInterval(timer);
+      });
+      this.timersId = [];
+    },
+    setIntervalForStock () {
+      this.products.forEach((item) => {
+        const timer = setInterval(() => {
+          item.stock -= 1
+          if (item.stock === 0) {
+            clearInterval(timer);
+          }
+        }, 1000 * this.getRandomSeconds());
+        this.timersId.push(timer);
+      });
+    },
     getRandomSeconds () {
       return Math.floor(Math.random() * (4 - 1 + 1) + 1);
     },
@@ -86,57 +118,55 @@ export default {
 </script>
 
 <style lang="sass">
-.badge_left
-  left: 8px
-  top: 8px
-  background-color: #71c396
-.badge_center
-  left: 50%
-  top: 8px
-  transform: translateX(-50%)
-  background-color: #e69349
-.badge_bottom
-  right: 8px
-  bottom: 8px
-  background-color: #9b5de2
-.products-item__badge
-  position: absolute
-  font-size: 10px
-  line-height: 12px
-  font-weight: 600
-  color: $white
-  padding: 4px 16px
-  border-radius: 100px
-.products-item__wrap-img
-  position: relative
-  margin-bottom: 2px
-.product-item__img
-  width: 100%
-  height: 177px
-.product-item__row_description
-  display: flex
-  align-items: center
-.product-item__title_description
-  margin-right: 3px
 .products-list
   display: flex
   flex-wrap: wrap
   align-items: center
-.products-item
+  &__item
+    &:not(:last-child)
+      margin-bottom: 8px
+.product-item
   overflow: hidden
   padding: 6px 6px 3px 6px
   border: 1px solid $gray-light
-.products-list__item
-  &:not(:last-child)
-    margin-bottom: 8px
-.product-item__row
-  //display: inline-block
-  //white-space: nowrap
-.product-item__title
-  font-weight: 600
-.product-item__multi-text
-  -webkit-line-clamp: 1
-  display: -webkit-box
-  -webkit-box-orient: vertical
-  overflow: hidden
+  &__badge
+    position: absolute
+    font-size: 10px
+    line-height: 12px
+    font-weight: 600
+    color: $white
+    padding: 4px 16px
+    border-radius: 100px
+  &__wrap-img
+    position: relative
+    margin-bottom: 2px
+  &__img
+    width: 100%
+    height: 177px
+  &__title
+    font-weight: 600
+  &__row_description
+    display: flex
+    align-items: center
+  &__multi-text
+    -webkit-line-clamp: 1
+    display: -webkit-box
+    -webkit-box-orient: vertical
+    overflow: hidden
+  &__title_description
+    margin-right: 3px
+.badge
+  &_left
+    left: 8px
+    top: 8px
+    background-color: #71c396
+  &_center
+    left: 50%
+    top: 8px
+    transform: translateX(-50%)
+    background-color: #e69349
+  &_bottom
+    right: 8px
+    bottom: 8px
+    background-color: #9b5de2
 </style>
