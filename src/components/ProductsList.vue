@@ -6,7 +6,7 @@
           v-for="(product, index) in products",
           :key="product.id")
           div.product-item__wrap-img
-            img.product-item__img(:src="product.thumbnail", :alt="product.title")
+            img.product-item__img(:src="product.thumbnail", loading="lazy", :alt="product.title")
             div.product-item__badge(
               v-if="index < 3",
               :class="getBadge(index).class",
