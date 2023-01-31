@@ -34,4 +34,16 @@ export default {
 <style lang="sass">
 .main__wrap
   padding: 8px 0px
+@media (min-width: 677px) and (max-width: 834px)
+  .main__wrap
+    padding: 16px 0px
+@media (min-width: 1024px) and (max-width: 1280px)
+  .main__wrap
+    padding: 16px 0px
+@media (min-width: 1440px) and (max-width: 1640px)
+  .main__wrap
+    padding: 16px 0px
+@media (min-width: 1641px)
+  .main__wrap
+    padding: 16px 0px
 </style>
