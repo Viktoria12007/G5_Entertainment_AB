@@ -2,7 +2,7 @@
 header.header
   div.container.header__container
     a.logo__link(href="#")
-      img.logo__img(src="../assets/logo.png", alt="Логотип")
+      img.logo__img(src="../assets/logo.png", alt="Logo")
     button.update-products-button(@click="updateProducts") Update Products
 </template>
 
