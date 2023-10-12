@@ -56,14 +56,13 @@ export default {
        this.imgs = this.getCookie(this.nameCookie);
     } else {
       while (this.imgs.length < 10) {
-        try {
-          const response = await axios.get('https://random.dog/woof.json');
-          if (['png', 'jpeg', 'jpg', 'gif'].includes(response.data.url.slice(-3).toLowerCase())) {
-            this.imgs.push(response.data.url);
-          }
-        } catch (e) {
+          await axios.get('https://random.dog/woof.json').then((response) => {
+            if (response.data.url && ['png', 'jpeg', 'jpg', 'gif'].includes(response.data.url.slice(-3).toLowerCase())) {
+              this.imgs.push(response.data.url);
+            }
+          }).catch((e) => {
           console.error(e);
-        }
+        });
       }
       this.setCookie(this.nameCookie, this.imgs);
     }

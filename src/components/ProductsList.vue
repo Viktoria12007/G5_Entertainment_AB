@@ -56,13 +56,14 @@ export default {
   },
   async mounted () {
     if (!localStorage.products) {
-      try {
-        const response = await axios.get('https://dummyjson.com/products?limit=100');
-        this.products = response.data.products;
-      } catch (e) {
+      await axios.get('https://dummyjson.com/products?limit=100').then((response) => {
+        if (response.data.products) {
+          this.products = response.data.products;
+          localStorage.products = JSON.stringify(this.products);
+        }
+      }).catch((e) => {
         console.error(e);
-      }
-      localStorage.products = JSON.stringify(this.products);
+      });
     }
     this.setIntervalForStock();
   },

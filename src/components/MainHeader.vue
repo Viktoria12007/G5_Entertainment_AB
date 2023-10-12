@@ -18,12 +18,13 @@ export default {
   },
   methods: {
     async updateProducts () {
-      try {
-        const response = await axios.get('https://dummyjson.com/products?limit=100');
-        this.updatedProducts = response.data.products;
-      } catch (e) {
+      await axios.get('https://dummyjson.com/products?limit=100').then((response) => {
+        if (response.data.products) {
+          this.updatedProducts = response.data.products;
+        }
+      }).catch((e) => {
         console.error(e);
-      }
+      });
       this.$emit('forcedUpdateProducts', this.updatedProducts);
     },
   },
