@@ -54,7 +54,6 @@ export default {
   async mounted () {
     if (this.getCookie(this.nameCookie)) {
        this.imgs = this.getCookie(this.nameCookie);
-      this.setCookie(this.nameCookie, this.imgs);
     } else {
       while (this.imgs.length < 10) {
         try {
