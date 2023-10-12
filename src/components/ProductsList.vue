@@ -41,7 +41,7 @@ export default {
   data () {
     return {
       products: localStorage.products ? JSON.parse(localStorage.products) : [],
-      timersId: [],
+      timerId: null,
     }
   },
   watch: {
@@ -49,7 +49,7 @@ export default {
       if (n.length) {
         this.products = n;
         localStorage.products = JSON.stringify(this.products);
-        this.clearAllIntervalForStock();
+        this.clearIntervalForStock();
         this.setIntervalForStock();
       }
     }
@@ -68,28 +68,39 @@ export default {
     this.setIntervalForStock();
   },
   beforeDestroy () {
-    this.clearAllIntervalForStock();
+    this.clearIntervalForStock();
+  },
+  computed: {
+    stockIsExist () {
+      return this.products.find(item => item.stock > 0);
+    },
   },
   methods: {
-    clearAllIntervalForStock () {
-      this.timersId.forEach((timer) => {
-        clearInterval(timer);
-      });
-      this.timersId = [];
+    clearIntervalForStock () {
+      clearInterval(this.timerId);
+      this.timerId = null;
     },
     setIntervalForStock () {
-      this.products.forEach((item) => {
-        const timer = setInterval(() => {
-          item.stock -= 1
-          if (item.stock === 0) {
-            clearInterval(timer);
-          }
-        }, 1000 * this.getRandomSeconds());
-        this.timersId.push(timer);
-      });
+      let time = 0;
+      const ticks = this.products.map(() => this.getRandomSeconds());
+      this.timerId = setInterval(() => {
+        if (time === 4) {
+          time = 1;
+        } else {
+          time += 1;
+        }
+        this.products.forEach((item, index) => {
+            if (ticks[index] === time && item.stock !== 0) {
+              item.stock -= 1;
+            }
+          });
+        if (!this.stockIsExist) {
+          clearInterval(this.timerId);
+        }
+      }, 1000);
     },
     getRandomSeconds () {
-      return Math.floor(Math.random() * (4 - 1 + 1) + 1);
+      return Math.floor(Math.random() * 4 + 1);
     },
     getBadge (order) {
       let badge;
